@@ -264,7 +264,7 @@ cd %{_builddir}
 %if "%{_cross_arch}" == "x86_64"
 # 2.24 for inf1 support
 rpmkeys --import %{S:4} --dbpath "${PWD}/rpmdb"
-rpmkeys --checksig %{S:2} --dbpath "${PWD}/rpmdb"
+rpmkeys --checksig --nodigest %{S:2} --dbpath "${PWD}/rpmdb"
 rm -rf "${PWD}/rpmdb"
 rpm2cpio %{S:2} | cpio -idmu './usr/src/aws-neuronx-*'
 find usr/src/ -mindepth 1 -maxdepth 1 -type d -exec mv {} neuron_2_24 \;
@@ -272,7 +272,7 @@ rm -r usr
 
 # latest neuron driver
 rpmkeys --import %{S:4} --dbpath "${PWD}/rpmdb"
-rpmkeys --checksig %{S:3} --dbpath "${PWD}/rpmdb"
+rpmkeys --checksig --nodigest %{S:3} --dbpath "${PWD}/rpmdb"
 rm -rf "${PWD}/rpmdb"
 rpm2cpio %{S:3} | cpio -idmu './usr/src/aws-neuronx-*'
 find usr/src/ -mindepth 1 -maxdepth 1 -type d -exec mv {} neuron_latest \;
