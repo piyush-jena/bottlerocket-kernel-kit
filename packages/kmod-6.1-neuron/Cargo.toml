@@ -1,0 +1,20 @@
+[package]
+name = "kmod-6_1-neuron"
+version = "0.1.0"
+edition = "2021"
+publish = false
+build = "../build.rs"
+
+[package.metadata.build-package]
+package-name = "kmod-6.1-neuron"
+
+[lib]
+path = "../packages.rs"
+
+[[package.metadata.build-package.external-files]]
+# Use latest-neuron-srpm-url.sh to get this.
+url = "https://yum.repos.neuron.amazonaws.com/aws-neuronx-dkms-2.26.10.0.noarch.rpm"
+sha512 = "ee49ab3aa9f4273a91aef305f30ed213c90c46317e72cfe46dd1d0e7088f0758039f998589ffc1080523f0af8f3348f9db4fe763b6fe8a0fd7d3119546cb1936"
+
+[build-dependencies]
+kernel-6_1 = { path = "../kernel-6.1" }
