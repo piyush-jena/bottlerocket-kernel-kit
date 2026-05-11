@@ -32,7 +32,7 @@ Conflicts: %{_cross_os}variant-flavor(nvidia-fips)
 
 %prep
 rpmkeys --import %{S:2} --dbpath "${PWD}/rpmdb"
-rpmkeys --checksig %{S:1} --dbpath "${PWD}/rpmdb"
+rpmkeys --define "_pkgverify_flags 0x0" --checksig %{S:1} --dbpath "${PWD}/rpmdb"
 rm -rf "${PWD}/rpmdb"
 rpm2cpio %{S:1} | cpio -idmu './usr/src/aws-neuronx-*'
 find usr/src/ -mindepth 1 -maxdepth 1 -type d -exec mv {} neuron_2_24 \;

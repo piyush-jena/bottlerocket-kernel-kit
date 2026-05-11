@@ -30,9 +30,9 @@ Conflicts: %{_cross_os}variant-flavor(nvidia-fips)
 
 %prep
 rpmkeys --import %{S:4} --dbpath "${PWD}/rpmdb"
-rpmkeys --checksig %{S:1} --dbpath "${PWD}/rpmdb"
-rpmkeys --checksig %{S:2} --dbpath "${PWD}/rpmdb"
-rpmkeys --checksig %{S:3} --dbpath "${PWD}/rpmdb"
+rpmkeys --define "_pkgverify_flags 0x0" --checksig %{S:1} --dbpath "${PWD}/rpmdb"
+rpmkeys --define "_pkgverify_flags 0x0" --checksig %{S:2} --dbpath "${PWD}/rpmdb"
+rpmkeys --define "_pkgverify_flags 0x0" --checksig %{S:3} --dbpath "${PWD}/rpmdb"
 rm -rf "${PWD}/rpmdb"
 
 # 2.x.7372.0 neuron driver
