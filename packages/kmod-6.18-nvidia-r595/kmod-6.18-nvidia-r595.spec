@@ -9,8 +9,6 @@
 # Branch-namespaced storage root for files that are overlaid onto canonical paths
 # at boot. Resolved to /usr/share/.nvidia/pb
 %global nvidia_root %{_cross_datadir}/.nvidia/%{nvidia_branch}
-# Branch-namespaced mirrors of the canonical dirs that the overlay service
-# mounts onto /usr/{share,lib64,bin} and /etc at boot.
 %global nvidia_datadir     %{nvidia_root}/share
 %global nvidia_libdir      %{nvidia_root}/lib64
 %global nvidia_bindir      %{nvidia_root}/bin
@@ -73,6 +71,10 @@ Source211: grid-license-check.timer
 Source212: open-gpu-license-fallback.service
 Source213: tesla-license-fallback.service
 Source214: grid-license-file-check.conf
+Source215: nvidia-imex.service
+Source216: nvidia-imex.cfg
+Source217: nvidia-imex-tmpfiles.conf
+Source218: nvidia-imex-default-channel.conf
 
 # NVIDIA tesla conf files from 300 to 399
 Source300: nvidia-tesla-pb-tmpfiles.conf
@@ -141,6 +143,13 @@ Provides: %{_cross_os}kmod-6.18-nvidia-%{nvidia_branch}-imex
 %description imex
 %{summary}.
 
+%package imex-config
+Summary: NVIDIA IMEX modprobe configuration
+Requires: %{name}-imex
+
+%description imex-config
+%{summary}.
+
 %package open-gpu
 Summary: NVIDIA %{tesla_major} Open GPU driver
 Version: %{tesla_ver}
@@ -176,10 +185,8 @@ Requires: %{name}-fabricmanager
 Provides: %{name}-tesla(fabricmanager)
 Provides: %{_cross_os}kmod-6.18-nvidia-%{nvidia_branch}-tesla
 Provides: %{_cross_os}nvidia-%{nvidia_branch}
-# Only one package may provide a given branch alias (e.g. one nvidia-pb across
-# kernel versions), and the two branches may not co-install unless the
-# nvidia-dual-branch image feature relaxes it. Expressed on the branch alias so
-# the gate holds regardless of kernel version.
+# Only one package may provide a given branch alias, and the two branches may
+# not co-install unless the nvidia-dual-branch image feature relaxes it
 Conflicts: %{_cross_os}nvidia-%{nvidia_branch}
 Conflicts: (%{_cross_os}nvidia-lts unless %{_cross_os}image-feature(nvidia-dual-branch))
 
@@ -391,6 +398,7 @@ sed -e 's|__NVIDIA_MODULES__|%{nvidia_datadir}/nvidia/grid/drivers/|' %{S:403} >
 install -m 0644 nvidia-%{nvidia_branch}-grid-copy-only.toml %{buildroot}%{_cross_factorydir}%{_cross_sysconfdir}/drivers
 %endif
 
+# Services to link/copy/load modules
 sed -e 's|PREFIX|%{_cross_prefix}|g' %{S:500} > nvidia-%{nvidia_branch}-link-tesla-kernel-modules.service
 sed -e 's|PREFIX|%{_cross_prefix}|g' %{S:501} > nvidia-%{nvidia_branch}-load-tesla-kernel-modules.service
 install -p -m 0644 \
@@ -571,6 +579,16 @@ install -p -m 0755 usr/bin/nvidia-imex-ctl %{buildroot}%{nvidia_bindir}
 
 popd
 
+# NVIDIA IMEX service, config, and tmpfiles
+install -p -m 0644 %{S:215} %{buildroot}%{_cross_unitdir}
+install -d %{buildroot}%{nvidia_sysconfdir}/nvidia-imex
+install -p -m 0644 %{S:216} %{buildroot}%{nvidia_sysconfdir}/nvidia-imex/config.cfg
+install -p -m 0644 %{S:217} %{buildroot}%{_cross_tmpfilesdir}/nvidia-imex.conf
+
+# NVIDIA IMEX modprobe config
+install -d %{buildroot}%{_cross_libdir}/modprobe.d
+install -p -m 0644 %{S:218} %{buildroot}%{_cross_libdir}/modprobe.d/10-nvidia-default-imex-channel.conf
+
 install -d %{buildroot}%{nvidia_datadir}/nvidia/gdrcopy/open-gpu/drivers
 
 install -p -m 0644 gdrcopy-%{gdrcopy_ver}/gdrdrv-open-gpu.ko \
@@ -601,10 +619,8 @@ install -p -m 0644 \
   nvidia-pb-overlay-config.service \
   %{buildroot}%{_cross_unitdir}
 
-# Canonical overlay mountpoints. The branch files now live under %{nvidia_root};
-# these empty directories are the targets the overlay service mounts onto, and
-# must exist in the image or the mount fails. (/usr/lib64 and /usr/bin already
-# exist in the base OS, so only the /usr/share/* targets are created here.)
+# Canonical overlay mountpoints. These directories are the targets the overlay
+# service mounts onto, and must exist in the image or the mount fails.
 install -d %{buildroot}%{_cross_datadir}/nvidia
 install -d %{buildroot}%{_cross_datadir}/vulkan
 install -d %{buildroot}%{_cross_datadir}/glvnd
@@ -621,15 +637,14 @@ install -d %{buildroot}%{_cross_datadir}/egl
 %dir %{nvidia_libdir}
 %dir %{nvidia_libdir}/nvidia/tesla
 %{nvidia_libdir}/nvidia/tesla/*
-# Canonical overlay mountpoint (empty; overlay service mounts the branch here)
+# Canonical overlay mountpoint
 %dir %{_cross_datadir}/nvidia
 %dir %{_cross_libdir}/modules-load.d
-# Flat, shared /etc/drivers factory dir (both branches ship branch-named tomls
-# here; %dir is non-%%-exclusive so co-owning it across branches is fine).
 %dir %{_cross_factorydir}%{_cross_sysconfdir}/drivers
 # Base package owns the etc/nvidia storage dirs so the overlay service's lowerdirs
 # always exist even when the fabricmanager/grid/imex subpackages are absent.
 %dir %{nvidia_sysconfdir}/nvidia
+%dir %{nvidia_sysconfdir}/nvidia-imex
 %{_cross_tmpfilesdir}/nvidia.conf
 %{_cross_libdir}/modules-load.d/nvidia-dependencies.conf
 
@@ -916,6 +931,12 @@ install -d %{buildroot}%{_cross_datadir}/egl
 %files imex
 %{nvidia_bindir}/nvidia-imex
 %{nvidia_bindir}/nvidia-imex-ctl
+%{_cross_unitdir}/nvidia-imex.service
+%{nvidia_sysconfdir}/nvidia-imex/config.cfg
+%{_cross_tmpfilesdir}/nvidia-imex.conf
+
+%files imex-config
+%{_cross_libdir}/modprobe.d/10-nvidia-default-imex-channel.conf
 
 %files mps
 %{nvidia_bindir}/nvidia-cuda-mps-control
