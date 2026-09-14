@@ -1,6 +1,6 @@
 #
 # Automatically generated file; DO NOT EDIT.
-# Linux/x86 6.18.44 Kernel Configuration
+# Linux/x86 6.18.48 Kernel Configuration
 #
 CONFIG_CC_VERSION_TEXT="x86_64-bottlerocket-linux-gnu-gcc (Buildroot 2025.05.1) 13.4.0"
 CONFIG_CC_IS_GCC=y
@@ -4880,6 +4880,7 @@ CONFIG_AMAZON_ENA_ETHERNET=m
 CONFIG_AMAZON_EFA_INFINIBAND=m
 CONFIG_AMAZON_IGB_UIO=m
 CONFIG_V4L2_LOOPBACK=m
+CONFIG_AMAZON_AWS_FWFLASH=m
 # end of Device Drivers
 
 #

@@ -8,13 +8,13 @@
 %global host_arch %(uname -m)
 
 Name: %{_cross_os}kernel-%{kmajor}
-Version: 6.18.44
+Version: 6.18.48
 Release: 1%{?dist}
 Summary: The Linux kernel
 License: GPL-2.0 WITH Linux-syscall-note
 URL: https://www.kernel.org/
 # Use latest-kernel-srpm-url.sh to get this.
-Source0: https://cdn.amazonlinux.com/al2023/blobstore/a5e9a9603f621fbd71a0f2361a2751e5941cb320d9c398b5680130a425e2bb77/kernel6.18-6.18.44-99.149.amzn2023.src.rpm
+Source0: https://cdn.amazonlinux.com/al2023/blobstore/8f76c454f8734354996349eec1e54079f92235fa20b3a455569af565528428ab/kernel6.18-6.18.48-107.148.amzn2023.src.rpm
 Source1: gpgkey-B21C50FA44A99720EAA72F7FE951904AD832C631.asc
 
 # Custom Bottlerocket kernel configurations.
@@ -730,6 +730,9 @@ install -p -m 0644 %{S:222} %{S:224} %{buildroot}%{_cross_unitdir}
 %if "%{_cross_arch}" == "x86_64"
 %{_cross_kmoddir}/kernel/drivers/acpi/acpi_extlog.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/acpi/acpi_pad.%{_ko}
+%endif
+%if "%{_cross_arch}" == "x86_64"
+%{_cross_kmoddir}/kernel/drivers/amazon/flash/aws_fwflash/aws_fwflash.%{_ko}
 %endif
 %{_cross_kmoddir}/kernel/drivers/amazon/media/v4l2-loopback/v4l2loopback.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/amazon/net/ena/ena.%{_ko}
