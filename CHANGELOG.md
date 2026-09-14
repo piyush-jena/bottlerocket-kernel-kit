@@ -1,3 +1,15 @@
+# v9.1.2 (2026-09-14)
+
+## OS Changes
+
+* Update kernel from 6.1.182-227.379 to 6.1.186-228.374 ([#553])
+* Update kernel from 6.18.44-99.149 to 6.18.48-107.148 ([#554])
+* Add patch to initialize `modname` and `offset` in `print_rec()` in kernel-6.1, kernel-6.12, and kernel-6.18 ([#552])
+
+[#552]: https://github.com/bottlerocket-os/bottlerocket-kernel-kit/pull/552
+[#553]: https://github.com/bottlerocket-os/bottlerocket-kernel-kit/pull/553
+[#554]: https://github.com/bottlerocket-os/bottlerocket-kernel-kit/pull/554
+
 # v9.1.1 (2026-09-10)
 
 ## OS Changes
