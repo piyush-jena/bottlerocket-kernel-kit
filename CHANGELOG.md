@@ -1,3 +1,16 @@
+# v9.2.0 (2026-09-18)
+
+## OS Changes
+
+* Move kmod-6.18 nvidia drivers to use overlayfs at boot ([#536])
+
+## Build Changes
+
+* Update Twoliter to v0.25.0 ([#560])
+
+[#536]: https://github.com/bottlerocket-os/bottlerocket-kernel-kit/pull/536
+[#560]: https://github.com/bottlerocket-os/bottlerocket-kernel-kit/pull/560
+
 # v9.1.3 (2026-09-18)
 
 ## OS Changes
