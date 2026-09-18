@@ -1,3 +1,11 @@
+# v9.1.3 (2026-09-18)
+
+## OS Changes
+
+* Backport patches to fix TUN and AH6 bugs in the networking stack ([#559])
+
+[#559]: https://github.com/bottlerocket-os/bottlerocket-kernel-kit/pull/559
+
 # v9.1.2 (2026-09-14)
 
 ## OS Changes
