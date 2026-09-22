@@ -1,0 +1,27 @@
+[advisory]
+id = "BRSA-9bf7f24eda64"
+title = "kernel CVE-2026-81000"
+cve = "CVE-2026-81000"
+severity = "high"
+description = "In the Linux kernel, the following vulnerability has been resolved: net: tun: bound receive headroom"
+
+[[advisory.products]]
+package-name = "kernel-6.1"
+patched-version = "6.1.186"
+patched-epoch = "0"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.103"
+patched-epoch = "0"
+
+[[advisory.products]]
+package-name = "kernel-6.18"
+patched-version = "6.18.48"
+patched-epoch = "0"
+
+[updateinfo]
+author = "tianlyu"
+issue-date = 2026-09-18T21:56:08Z
+arches = ["x86_64", "aarch64"]
+version = "9.1.3"
